@@ -1,3 +1,3 @@
-### Project Tasks Manager 
+### Tasks Manager App
 
 ### Codebase for learning Django

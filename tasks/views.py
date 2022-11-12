@@ -14,11 +14,12 @@ class CategoryViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
+
 class TaskViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
-        if self.request.method in ['POST']:
+        if self.request.method in ["POST", "PATCH"]:
             return TaskWriteSerializer
         return TaskReadSerializer
 
@@ -29,7 +30,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         serializer.save(created_by=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)  
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         task = TaskReadSerializer(serializer.instance)

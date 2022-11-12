@@ -9,12 +9,15 @@ from django.utils.translation import gettext_lazy as _
 class CustomerUserManager(UserManager):
     def get_by_natural_key(self, username):
         return self.get(
-            Q(**{self.model.USERNAME_FIELD: username}) |
-            Q(**{self.model.EMAIL_FIELD: username})
+            Q(**{self.model.USERNAME_FIELD: username})
+            | Q(**{self.model.EMAIL_FIELD: username})
         )
 
+
 class CustomUser(AbstractUser):
-    username_validator = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
+    username_validator = RegexValidator(
+        r"^[0-9a-zA-Z]*$", "Only alphanumeric characters are allowed."
+    )
     username = models.CharField(
         _("username"),
         max_length=150,

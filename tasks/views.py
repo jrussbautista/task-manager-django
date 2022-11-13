@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import CategorySerializer, TaskReadSerializer, TaskWriteSerializer
 from .filters import TaskFilter
 from .pagination import DefaultPagination
+from .permissions import TaskCategoryOwnPermission
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -22,7 +23,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class TaskViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, TaskCategoryOwnPermission]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = TaskFilter
     pagination_class = DefaultPagination

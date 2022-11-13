@@ -1,14 +1,15 @@
 
-
+from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import CategorySerializer, TaskReadSerializer, TaskWriteSerializer
+from .serializers import CategorySerializer, TaskReadSerializer, TaskWriteSerializer, TaskCompletionStatSerializer
 from .filters import TaskFilter
 from .pagination import DefaultPagination
 from .permissions import TaskCategoryOwnPermission
+from .models import Task
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -48,3 +49,13 @@ class TaskViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         task = TaskReadSerializer(serializer.instance)
         return Response(task.data)
+
+
+class TaskCompletionStatViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        user = self.request.user
+        queryset = Task.objects.filter(created_by=user).values('is_completed').annotate(count=Count('is_completed'))
+        serializer = TaskCompletionStatSerializer(queryset, many=True)
+        return Response(serializer.data)

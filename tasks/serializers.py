@@ -22,7 +22,9 @@ class TaskWriteSerializer(serializers.ModelSerializer):
         fields = ['title', 'description', 'category', 'is_completed']
                
     
-
-
-
+class TaskCompletionStatSerializer(serializers.ModelSerializer):
+    count = serializers.IntegerField()
+    class Meta:
+        model = Task
+        fields = ['is_completed', 'count']
         
